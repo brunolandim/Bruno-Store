@@ -5,7 +5,7 @@ import React from 'react'
 export default function Header() {
   const store = 'Bruno`s shop'
   return (
-    <div className='p-3 bg-orange-400 text-white'>
+    <div className='p-3 bg-purple-700 text-white'>
             <div className='flex items-center justify-between'>
               <Link href='/'>
                 <HomeIcon width={30} color="white" />

@@ -41,7 +41,7 @@ export default function ProductsPage() {
   return (
     <div className="font-mono p-5">
       <div className="bg-white flex flex-row border shadow-md rounded-3xl items-center p-2 my-5 max-w-4xl md:m-auto">
-        <SearchIcon className="ml-2 sm:m-auto" width={25} color="orange" />
+        <SearchIcon className="ml-2 sm:m-auto" width={25} color="purple" />
         <input 
           className="flex-grow outline-none ml-2 font-sans" 
           placeholder="Busque um produto" 
@@ -51,26 +51,35 @@ export default function ProductsPage() {
         />
       </div>
 
-      <div className='py-5 flex flex-col md:flex-row flex-wrap'>
-        {dataProduct.reduce<string[]>((categories, product) => {
-          if (product.category && !categories.includes(product.category.name)) {
-            return [...categories, product.category.name];
-          }
-          return categories;
-        }, []).map((categoryName) => (
-          <label key={categoryName} className='mx-5 '>
-            <input
-            className='mx-2'
-              type="checkbox"
-              checked={selectedCategories.includes(categoryName)}
-              onChange={() => handleCategoryChange(categoryName)}
-            />
-            {categoryName}
-          </label>
-        ))}
+      <div className='flex flex-row py-5'>
+
+      <div className='flex flex-row'>
+        <div className='flex flex-col'>
+          <h1 className='font-bold'>Filtros</h1>
+          <hr />
+          {dataProduct.reduce<string[]>((categories, product) => {
+            if (product.category && !categories.includes(product.category.name)) {
+              return [...categories, product.category.name];
+            }
+            return categories;
+          }, []).map((categoryName) => (
+            <div className='items-center mt-2' key={categoryName}>
+              <label className='flex items-center my-2' key={categoryName}>
+                <input
+                  type='checkbox'
+                  checked={selectedCategories.includes(categoryName)}
+                  onChange={() => handleCategoryChange(categoryName)}
+                />
+
+                <span className='md:w-40 mx-2'>{categoryName}</span>
+              </label>
+            </div>
+          ))}
+        </div>
       </div>
-      <hr className='my-5'/>
       <div>
+        <h1 className='text-center font-bold'>Produtos Encontrados: {filteredProducts.length}</h1>
+        <hr />
         <div className="flex flex-col md:flex-row flex-wrap gap-7 justify-center">
           {filteredProducts.map((product) => (
                 <div className='hover:-translate-y-1 transition duration-200' key={product.id}>
@@ -85,6 +94,7 @@ export default function ProductsPage() {
               ))
           }
         </div>
+      </div>
       </div>
     </div>
   )
