@@ -1,7 +1,7 @@
 export type Product = {
     name:string,
     shortDescription: string,
-    id?: string,
+    id: string,
     images: {
         alt: string;
         asset: {

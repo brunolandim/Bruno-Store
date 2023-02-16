@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import products from '@/provider/products.json'
 import Card from '../organisms/Card';
 import type { Product } from '../types/Product';
@@ -11,6 +11,8 @@ export default function ProductsPage() {
   const [search , setSearch] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
+  
+
   useEffect(() => {
     setDataProduct(products.data.nodes)
     setLoading(false)
@@ -22,20 +24,23 @@ export default function ProductsPage() {
       : [...selectedCategories, categoryName];
     setSelectedCategories(newSelectedCategories);
   };
-  const filteredProducts = search.length > 0
-  ? dataProduct.filter((product) => product.name.includes(search))
-  : selectedCategories.length > 0
-    ? dataProduct.filter((product) =>
-      selectedCategories.includes(product.category.name)
-      )
-    : dataProduct;
+  const filteredProducts = useMemo<Product[]>(() =>{
+    let products:Product[] = dataProduct
+    if (search.length > 0) {
+      products = products.filter((product) => product.name.includes(search))
+    }
+   if(selectedCategories.length > 0 ) {
+     products = products.filter((product) =>selectedCategories.includes(product.category.name))
+   }
+   return products;
+  },[dataProduct,search,selectedCategories])
 
   if (loading) {
     return <p>Carregando...</p>
   }
   return (
     <div className="font-mono p-5">
-      <div className="flex flex-row border shadow-md rounded-3xl items-center p-2 my-5 max-w-4xl md:m-auto">
+      <div className="bg-white flex flex-row border shadow-md rounded-3xl items-center p-2 my-5 max-w-4xl md:m-auto">
         <SearchIcon className="ml-2 sm:m-auto" width={25} color="orange" />
         <input 
           className="flex-grow outline-none ml-2 font-sans" 
@@ -48,7 +53,7 @@ export default function ProductsPage() {
 
       <div className='py-5 flex flex-col md:flex-row flex-wrap'>
         {dataProduct.reduce<string[]>((categories, product) => {
-          if (product.category.name && !categories.includes(product.category.name)) {
+          if (product.category && !categories.includes(product.category.name)) {
             return [...categories, product.category.name];
           }
           return categories;
@@ -66,27 +71,16 @@ export default function ProductsPage() {
       </div>
       <hr className='my-5'/>
       <div>
-        <div className="flex flex-col md:flex-row flex-wrap gap-7">
-          {search.length > 0 
-            ? filteredProducts.map((product) => (
-                <div key={product.id}>
+        <div className="flex flex-col md:flex-row flex-wrap gap-7 justify-center">
+          {filteredProducts.map((product) => (
+                <div className='hover:-translate-y-1 transition duration-200' key={product.id}>
                   <Card 
                     name={product.name}
                     image={product.images[0].asset?.url}
                     alt={product.images[0].alt}
                     shortDescription={product.shortDescription}
+                    id={product.id}
                   />
-                </div>
-              ))
-            : dataProduct.map((product) => (
-              <div key={product.id}>
-                <Card 
-                  key={product.id}
-                  name={product.name}
-                  image={product.images[0].asset?.url}
-                  alt={product.images[0].alt}
-                  shortDescription={product.shortDescription}
-                />
                 </div>
               ))
           }
