@@ -13,7 +13,7 @@ type ProductCard = {
 
 export default function Card({ name, image, alt, id }: ProductCard) {
   return (
-    <div className='p-4 flex flex-col md:flex-row md:flex-wrap text-center shadow-xl rounded-lg'>
+    <div className='p-4 mt-5 flex flex-col md:flex-row md:flex-wrap text-center shadow-xl rounded-lg hover:-translate-y-1 transition duration-200'>
       <div className="w-full md:w-72 h-auto md:mr-4">
         <h2>{name}</h2>
         <Image className='m-auto' width={150} height={200} src={image} alt={alt} />

@@ -24,13 +24,13 @@ export default function ProductsPage() {
       : [...selectedCategories, categoryName];
     setSelectedCategories(newSelectedCategories);
   };
-  const filteredProducts = useMemo<Product[]>(() =>{
+  const filteredProducts = useMemo<Product[]>(() => {
     let products:Product[] = dataProduct
     if (search.length > 0) {
       products = products.filter((product) => product.name.includes(search))
     }
    if(selectedCategories.length > 0 ) {
-     products = products.filter((product) =>selectedCategories.includes(product.category.name))
+     products = products.filter((product) => selectedCategories.includes(product.category.name))
    }
    return products;
   },[dataProduct,search,selectedCategories])
@@ -82,15 +82,14 @@ export default function ProductsPage() {
         <hr />
         <div className="flex flex-col md:flex-row flex-wrap gap-7 justify-center">
           {filteredProducts.map((product) => (
-                <div className='hover:-translate-y-1 transition duration-200' key={product.id}>
                   <Card 
+                    key={product.id}
                     name={product.name}
                     image={product.images[0].asset?.url}
                     alt={product.images[0].alt}
                     shortDescription={product.shortDescription}
                     id={product.id}
                   />
-                </div>
               ))
           }
         </div>
